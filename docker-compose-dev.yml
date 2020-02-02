@@ -14,3 +14,4 @@ services:
         environment:
             - FLASK_APP=project/__init__.py
             - FLASK_DEBIG=1
+            - APP_SETTINGS=project.config.DevelopmentConfig
