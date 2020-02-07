@@ -1,37 +1,46 @@
-import datetime
 import os
 
-from flask import Flask, jsonify
+from flask import Flask
 
+from flask_bcrypt import Bcrypt
+from flask_cors import CORS
+from flask_debugtoolbar import DebugToolbarExtension
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
-# instantiate the app
-app = Flask(__name__)
+# instantiate the extensions
+db = SQLAlchemy()
+#toolbar = DebugToolbarExtension()
+migrate = Migrate()
+bcrypt = Bcrypt()
 
-# set config
-app_settings = os.getenv("APP_SETTINGS")
-app.config.from_object(app_settings)
 
-# db instance
-db = SQLAlchemy(app)
+def create_app(script_info=None):
+    # instantiate the app
+    app = Flask(__name__)
 
-# model
-class User(db.Model):
-    __tablename__ = "users"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    username = db.Column(db.String(128), nullable=False)
-    email = db.Column(db.String(128), nullable=False)
-    active = db.Column(db.Boolean(), default=True, nullable=False)
+    # enable CORS
+    CORS(app)
 
-    def __init__(self, username, email):
-        self.username = username
-        self.email = email
+    # set config
+    app_settings = os.getenv('APP_SETTINGS')
+    app.config.from_object(app_settings)
 
-# routes
+    # set up extensions
+    db.init_app(app)
+    #toolbar.init_app(app)
+    migrate.init_app(app, db)
+    bcrypt.init_app(app)
 
-@app.route('/users/ping', methods=['GET'])
-def ping_pong():
-    return jsonify({
-        'status': 'success',
-        'message': 'pong!'
-    })
+    # register blueprints
+    # from project.api.users import users_blueprint
+    # app.register_blueprint(users_blueprint)
+    # from project.api.auth import auth_blueprint
+    # app.register_blueprint(auth_blueprint)
+
+    # shell context for flask cli
+    @app.shell_context_processor
+    def ctx():
+        return {'app': app, 'db': db}
+
+    return app

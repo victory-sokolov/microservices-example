@@ -1,9 +1,9 @@
-FROM python:3.6.4
+FROM python:3.7.2-slim
 
-RUN apt-get update -yqq \
-  && apt-get install -yqq --no-install-recommends \
-  netcat \
-  && apt-get -q clean
+RUN apt-get update &&  \
+    apt-get install -y  \
+    netcat && \
+    apt-get clean
 
 # set working directory
 RUN mkdir -p /usr/src/app
@@ -11,15 +11,12 @@ WORKDIR /usr/src/app
 
 # add requirements
 COPY ./requirements.txt /usr/src/app/requirements.txt
-# install requirements
 RUN pip install --upgrade pip --no-cache-dir -r requirements.txt
-
-# add entrypoint.sh
-COPY ./entrypoint.sh /usr/src/app/entrypoint.sh
-RUN chmod +x /usr/src/app/entrypoint.sh
 
 # add app
 COPY . /usr/src/app
+
+RUN chmod +x /usr/src/app/entrypoint.sh
 
 # run server
 CMD ["/usr/src/app/entrypoint.sh"]
