@@ -11,7 +11,7 @@ WORKDIR /usr/src/app
 
 # add requirements
 COPY ./requirements.txt /usr/src/app/requirements.txt
-RUN pip install --upgrade pip --no-cache-dir -r requirements.txt
+RUN pip install --upgrade pip -r requirements.txt
 
 # add app
 COPY . /usr/src/app
