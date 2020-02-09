@@ -1,15 +1,17 @@
 # services/users/project/tests/base.py
-from flask_testing import TestCase
+import unittest
 
 from project import create_app, db
 
-app = create_app()
 
+class BaseTestCase(unittest.TestCase):
+    def __init__(self, *args, **kwargs):
+        self.app = create_app()
+        super(BaseTestCase, self).__init__(*args, **kwargs)
 
-class BaseTestCase(TestCase):
     def create_app(self):
-        app.config.from_object('project.config.TestingConfig')
-        return app
+        self.app.config.from_object("project.config.TestingConfig")
+        return self.app
 
     def setUp(self):
         db.create_all()
