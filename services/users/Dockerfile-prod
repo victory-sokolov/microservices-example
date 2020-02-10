@@ -1,0 +1,22 @@
+FROM python:3.7.2-slim
+
+RUN apt-get update &&  \
+    apt-get install -y  \
+    netcat && \
+    apt-get clean
+
+# set working directory
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+# add requirements
+COPY ./requirements.txt /usr/src/app/requirements.txt
+RUN pip install --upgrade pip -r requirements.txt
+
+# add app
+COPY . /usr/src/app
+
+RUN chmod +x /usr/src/app/entrypoint-prod.sh
+
+# run server
+CMD ["/usr/src/app/entrypoint-prod.sh"]
