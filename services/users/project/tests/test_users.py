@@ -6,6 +6,7 @@ from project.api.models import User
 from project.tests.base import BaseTestCase
 from utils import post_user_data
 
+
 def add_user(username, email):
     user = User(username=username, email=email)
     db.session.add(user)

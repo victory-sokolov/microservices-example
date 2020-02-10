@@ -3,6 +3,7 @@ import os
 import unittest
 
 from flask import current_app
+
 from project import create_app
 
 app = create_app()
