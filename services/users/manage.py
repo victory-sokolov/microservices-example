@@ -11,7 +11,7 @@ app = create_app()
 cli = FlaskGroup(create_app=create_app)
 
 
-@cli.command()
+@cli.command("seed_db")
 def seed_db():
     """Add initial data to the database."""
     db.session.add(User(username="viktor", email="viktorsokolov.and@gmail.com"))

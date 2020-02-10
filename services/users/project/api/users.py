@@ -1,10 +1,10 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, render_template, request
 from sqlalchemy import exc
 
 from project import db
 from project.api.models import User
 
-users_blueprint = Blueprint("users", __name__)
+users_blueprint = Blueprint("users", __name__, template_folder="./templates")
 
 
 @users_blueprint.route("/users/ping", methods=["GET"])
@@ -14,6 +14,7 @@ def ping_pong():
 
 @users_blueprint.route("/users", methods=["POST"])
 def add_user():
+    """Add user to db."""
     post_data = request.get_json()
     response_object = {"status": "fail", "message": "Invalid payload"}
 
@@ -38,29 +39,32 @@ def add_user():
         return jsonify(response_object), 400
 
 
-@users_blueprint.route('/users/<user_id>', methods=['GET'])
+@users_blueprint.route("/users/<user_id>", methods=["GET"])
 def get_single_user(user_id):
-    """ Get single users details. """
+    """Get single users details."""
     user = User.query.filter_by(id=user_id).first()
     response_object = {
-        'status': 'success',
-        'data' : {
-            'id' : user.id,
-            'username': user.username,
-            'email' : user.email,
-            'active' : user.active
-        }
+        "status": "success",
+        "data": {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "active": user.active,
+        },
     }
     return jsonify(response_object), 200
 
 
-@users_blueprint.route('/users', methods=['GET'])
+@users_blueprint.route("/users", methods=["GET"])
 def get_all_users():
-    """Get all users"""
+    """Get all users."""
     response_object = {
-        'status': 'success',
-        'data' : {
-            'users': [user.to_json() for user in User.query.all()]
-        }
+        "status": "success",
+        "data": {"users": [user.to_json() for user in User.query.all()]},
     }
     return jsonify(response_object), 200
+
+
+@users_blueprint.route("/", methods=["GET"])
+def index():
+    return render_template("index.html")
