@@ -30,7 +30,7 @@ services:
         build:
             context: ./services/nginx
             dockerfile: Dockerfile
-        #restart: always
+        restart: always
         ports:
             - 80:80
         depends_on:
