@@ -13,7 +13,6 @@ def add_user(username, email):
     db.session.commit()
     return user
 
-
 class TestUserService(BaseTestCase):
     """ Tests for the Users Service. """
 
