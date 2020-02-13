@@ -5,4 +5,4 @@ services/users/project/tests/__pycache__/
 services/users/project/__pycache__/
 services/users/api/__pycache__/
 testdriven notes.txt
-users/htmlcov
+services/users/htmlcov/
